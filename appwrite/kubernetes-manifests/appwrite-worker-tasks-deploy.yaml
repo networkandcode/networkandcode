@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appwrite-worker-tasks
+spec:
+  selector:
+    matchLabels:
+      app: appwrite-worker-tasks
+  template:
+    metadata:
+      labels:
+        app: appwrite-worker-tasks
+    spec:
+      containers:
+        - command:
+            - worker-tasks
+          image: appwrite/appwrite:0.10.4
+          name: appwrite-worker-tasks
+          env:
+          - name: _APP_ENV
+            valueFrom:
+              configMapKeyRef:
+                key: _APP_ENV
+                name: appwrite
+          - name: _APP_SYSTEM_SECURITY_EMAIL_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                key: _APP_SYSTEM_SECURITY_EMAIL_ADDRESS
+                name: appwrite
+          - name: _APP_OPENSSL_KEY_V1
+            valueFrom:
+              secretKeyRef:
+                key: _APP_OPENSSL_KEY_V1
+                name: appwrite
+          envFrom:
+          - secretRef:
+              name: appwrite-redis
+          - secretRef:
+              name: appwrite-mariadb

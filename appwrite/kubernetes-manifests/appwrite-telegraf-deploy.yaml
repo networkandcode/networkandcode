@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appwrite-telegraf
+spec:
+  selector:
+    matchLabels:
+      app: appwrite-telegraf
+  template:
+    metadata:
+      labels:
+        app: appwrite-telegraf
+    spec:
+      containers:
+        - image: appwrite/telegraf:1.2.0
+          name: appwrite-telegraf
+          envFrom:
+          - secretRef:
+              name: appwrite-influxdb
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: appwrite-telegraf
+stringData:
+  _APP_STATSD_HOST: appwrite-telegraf
+  _APP_STATSD_PORT: "8125"

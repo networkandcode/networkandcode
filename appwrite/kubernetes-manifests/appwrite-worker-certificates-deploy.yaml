@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appwrite-worker-certificates
+spec:
+  selector:
+    matchLabels:
+      app: appwrite-worker-certificates
+  template:
+    metadata:
+      labels:
+        app: appwrite-worker-certificates
+    spec:
+      containers:
+        - command:
+            - worker-certificates
+          image: appwrite/appwrite:0.10.4
+          name: appwrite-worker-certificates
+          volumeMounts:
+            - mountPath: /storage/config
+              name: appwrite-config
+            - mountPath: /storage/certificates
+              name: appwrite-certificates
+          envFrom:
+          - configMapRef:
+              name: appwrite
+          - secretRef:
+              name: appwrite-redis
+          - secretRef:
+              name: appwrite-mariadb
+      volumes:
+        - name: appwrite-config
+          persistentVolumeClaim:
+            claimName: appwrite-config
+        - name: appwrite-certificates
+          persistentVolumeClaim:
+            claimName: appwrite-certificates

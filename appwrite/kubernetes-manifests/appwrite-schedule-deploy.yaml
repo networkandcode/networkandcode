@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appwrite-schedule
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: appwrite-schedule
+  template:
+    metadata:
+      labels:
+        app: appwrite-schedule
+    spec:
+      containers:
+        - command:
+            - schedule
+          image: appwrite/appwrite:0.10.4
+          name: appwrite-schedule
+          envFrom:
+          - configMapRef:
+              name: appwrite
+          - secretRef:
+              name: appwrite-redis

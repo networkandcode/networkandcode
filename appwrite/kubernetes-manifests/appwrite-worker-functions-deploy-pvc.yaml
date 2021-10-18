@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appwrite-worker-functions
+spec:
+  selector:
+    matchLabels:
+      app: appwrite-worker-functions
+  template:
+    metadata:
+      labels:
+        app: appwrite-worker-functions
+    spec:
+      containers:
+        - command:
+            - worker-functions
+          image: appwrite/appwrite:0.10.4
+          name: appwrite-worker-functions
+          volumeMounts:
+            - mountPath: /storage/functions
+              name: appwrite-functions
+            - mountPath: /tmp
+              name: tmp
+          env:
+          - name: _APP_ENV
+            valueFrom:
+              configMapKeyRef:
+                key: _APP_ENV
+                name: appwrite
+          - name: _APP_FUNCTIONS_TIMEOUT
+            valueFrom:
+              configMapKeyRef:
+                key: _APP_FUNCTIONS_TIMEOUT
+                name: appwrite
+          - name: _APP_FUNCTIONS_CONTAINERS
+            valueFrom:
+              configMapKeyRef:
+                key: _APP_FUNCTIONS_CONTAINERS
+                name: appwrite
+          - name: _APP_FUNCTIONS_CPUS
+            valueFrom:
+              configMapKeyRef:
+                key: _APP_FUNCTIONS_CPUS
+                name: appwrite
+          - name: _APP_FUNCTIONS_MEMORY
+            valueFrom:
+              configMapKeyRef:
+                key: _APP_FUNCTIONS_MEMORY
+                name: appwrite
+          - name: _APP_FUNCTIONS_MEMORY_SWAP
+            valueFrom:
+              configMapKeyRef:
+                key: _APP_FUNCTIONS_MEMORY_SWAP
+                name: appwrite
+          - name: _APP_USAGE_STATS
+            valueFrom:
+              configMapKeyRef:
+                key: _APP_USAGE_STATS
+                name: appwrite
+          - name: _APP_OPENSSL_KEY_V1
+            valueFrom:
+              secretKeyRef:
+                key: _APP_OPENSSL_KEY_V1
+                name: appwrite
+          envFrom:
+          - secretRef:
+              name: appwrite-redis
+          - secretRef:
+              name: appwrite-mariadb
+      volumes:
+        - name: tmp
+          hostPath:
+            path: /tmp
+        - name: appwrite-functions
+          persistentVolumeClaim:
+            claimName: appwrite-functions

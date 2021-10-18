@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appwrite-traefik
+spec:
+  selector:
+    matchLabels:
+      app: appwrite-traefik
+  template:
+    metadata:
+      labels:
+        app: appwrite-traefik
+    spec:
+      containers:
+      - name: appwrite-traefik
+        image: traefik:2.5
+        args:
+        - --providers.file.directory=/storage/config
+        - --providers.file.watch=true
+        - --providers.docker=true
+        - --providers.docker.exposedByDefault=false
+        - --providers.docker.constraints=Label(`traefik.constraint-label-stack`,`appwrite`)
+        - --entrypoints.appwrite_web.address=:80
+        - --entrypoints.appwrite_websecure.address=:443
+        volumeMounts:
+        - mountPath: /storage/config
+          name: appwrite-config
+          readOnly: true
+        - mountPath: /storage/certificates
+          name: appwrite-certificates
+          readOnly: true
+      volumes:
+      - name: appwrite-config
+        persistentVolumeClaim:
+          claimName: appwrite-config
+          readOnly: true
+      - name: appwrite-certificates
+        persistentVolumeClaim:
+          claimName: appwrite-certificates
+          readOnly: true    
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik
+spec:
+  selector:
+    app: traefik
+  ports:
+  - name: http
+    port: 80
+  - name: https
+    port: 443

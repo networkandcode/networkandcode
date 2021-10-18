@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appwrite-worker-deletes
+spec:
+  selector:
+    matchLabels:
+      app: appwrite-worker-deletes
+  template:
+    metadata:
+      labels:
+        app: appwrite-worker-deletes
+    spec:
+      containers:
+        - command:
+            - worker-deletes
+          image: appwrite/appwrite:0.10.4
+          name: appwrite-worker-deletes
+          volumeMounts:
+            - mountPath: /storage/uploads
+              name: appwrite-uploads
+            - mountPath: /storage/cache
+              name: appwrite-cache
+            - mountPath: /storage/certificates
+              name: appwrite-certificates
+          envFrom:
+          - configMapRef:
+              name: appwrite
+          - secretRef:
+              name: appwrite-redis
+          - secretRef:
+              name: appwrite-mariadb
+      volumes:
+        - name: appwrite-uploads
+          persistentVolumeClaim:
+            claimName: appwrite-uploads
+        - name: appwrite-cache
+          persistentVolumeClaim:
+            claimName: appwrite-cache
+        - name: appwrite-certificates
+          persistentVolumeClaim:
+            claimName: appwrite-certificates

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appwrite-worker-usage
+spec:
+  selector:
+    matchLabels:
+      app: appwrite-worker-usage
+  template:
+    metadata:
+      labels:
+        app: appwrite-worker-usage
+    spec:
+      containers:
+        - command:
+            - worker-usage
+          image: appwrite/appwrite:0.10.4
+          name: appwrite-worker-usage
+          envFrom:
+          - configMapRef:
+              name: appwrite
+          - secretRef:
+              name: appwrite-redis
+          - secretRef:
+              name: appwrite-telegraf

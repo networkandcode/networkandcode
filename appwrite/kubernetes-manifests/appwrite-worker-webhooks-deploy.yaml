@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appwrite-worker-webhooks
+spec:
+  selector:
+    matchLabels:
+      app: appwrite-worker-webhooks
+  template:
+    metadata:
+      labels:
+        app: appwrite-worker-webhooks
+    spec:
+      containers:
+        - command:
+            - worker-webhooks
+          image: appwrite/appwrite:0.10.4
+          name: appwrite-worker-webhooks
+          env:
+          - name: _APP_ENV
+            valueFrom:
+              configMapKeyRef:
+                key: _APP_ENV
+                name: appwrite
+          - name: _APP_SYSTEM_SECURITY_EMAIL_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                key: _APP_SYSTEM_SECURITY_EMAIL_ADDRESS
+                name: appwrite
+          envFrom:
+          - secretRef:
+              name: appwrite-redis 

@@ -1,0 +1,67 @@
+# consumed by appwrite and appwrite-worker-deletes
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: appwrite-cache
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+
+---
+
+# consumed by appwrite, appwrite-certificates, appwrite-deletes and traefik
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: appwrite-certificates
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+
+---
+
+# consumed by appwrite, appwrite-worker-certificates and traefik
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: appwrite-config
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+
+---
+
+# consumed by appwrite, appwrite-worker-certificates, appwrite-worker-functions
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: appwrite-functions
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+
+---
+
+# consumed by appwrite, appwrite-deletes
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: appwrite-uploads
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi

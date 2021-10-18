@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appwrite-worker-audits
+spec:
+  selector:
+    matchLabels:
+      app: appwrite-worker-audits
+  template:
+    metadata:
+      labels:
+        app: appwrite-worker-audits
+    spec:
+      containers:
+        - command:
+            - worker-audits
+          image: appwrite/appwrite:0.10.4
+          name: appwrite-worker-audits
+          envFrom:
+          - configMapRef:
+              name: appwrite
+          - secretRef:
+              name: appwrite-redis
+          - secretRef:
+              name: appwrite-mariadb

@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: appwrite-maintenance
+data:
+  _APP_MAINTENANCE_INTERVAL: "86400"
+  _APP_MAINTENANCE_RETENTION_EXECUTION: "1209600"
+  _APP_MAINTENANCE_RETENTION_ABUSE: "86400"
+  _APP_MAINTENANCE_RETENTION_AUDIT: "1209600"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appwrite-maintenance
+spec:
+  selector:
+    matchLabels:
+      app: appwrite-maintenance
+  template:
+    metadata:
+      labels:
+        app: appwrite-maintenance
+    spec:
+      containers:
+        - command:
+            - maintenance
+          image: appwrite/appwrite:0.10.4
+          name: appwrite-maintenance
+          envFrom:
+          - configMapRef:
+              name: appwrite
+          - configMapRef:
+              name: appwrite-maintenance
+          - secretRef:
+              name: appwrite-redis
