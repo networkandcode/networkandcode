@@ -14,7 +14,7 @@ spec:
       containers:
         - command:
             - worker-tasks
-          image: appwrite/appwrite:0.10.4
+          image: appwrite/appwrite:0.11
           name: appwrite-worker-tasks
           env:
           - name: _APP_ENV

@@ -14,7 +14,7 @@ spec:
       containers:
         - command:
             - worker-webhooks
-          image: appwrite/appwrite:0.10.4
+          image: appwrite/appwrite:0.11
           name: appwrite-worker-webhooks
           env:
           - name: _APP_ENV

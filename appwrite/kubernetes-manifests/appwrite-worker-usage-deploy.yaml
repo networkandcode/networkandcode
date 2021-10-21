@@ -14,7 +14,7 @@ spec:
       containers:
         - command:
             - worker-usage
-          image: appwrite/appwrite:0.10.4
+          image: appwrite/appwrite:0.11
           name: appwrite-worker-usage
           envFrom:
           - configMapRef:
